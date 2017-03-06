@@ -58,8 +58,8 @@ public class MainClass {
         if (currencyCode.length() > 3 || currencyCode.length() < 3) {
             System.out.println(CODE_QUALITY);
         }
-
-        if (dateFrom.isAfter(dateTo)) {
+        LocalDate finalDate = LocalDate.of(2002, 1, 1);
+        if (dateFrom.isAfter(dateTo) || dateFrom.isBefore(finalDate) || dateTo.isBefore(finalDate)) {
             System.out.println(DATE_FROM_GT_DATE_TO);
             System.exit(1);
         }
