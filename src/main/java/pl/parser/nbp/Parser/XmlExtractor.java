@@ -7,10 +7,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by valkos on 04.03.17.
@@ -20,7 +17,7 @@ public class XmlExtractor {
     private static final String EXTENSION = ".txt";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.BASIC_ISO_DATE;
     private static final String UTF8_BOM = "\uFEFF"; //it is possible to keep the result with BOM prefix only manually
-    private Map<LocalDate, String> files = new TreeMap<>();
+    private Set<String> nameOfFile = new HashSet<>();
 
     private LocalDate dateFrom;
     private LocalDate dateTo;
@@ -30,7 +27,7 @@ public class XmlExtractor {
         this.dateTo = dateTo;
     }
 
-    public List<String> extractXmlNames() {
+    public Set<String> extractXmlNames() {
         int currentYear = Year.now().getValue();
         int yearFrom = dateFrom.getYear();
         int yearTo = dateTo.getYear();
@@ -45,13 +42,7 @@ public class XmlExtractor {
                 readNamesForPreviuosYears(yearFrom, yearTo);
             }
         }
-        List<String> chosenFiles = new ArrayList<>();
-        files.forEach( (key, value) -> {
-            if ( key.isEqual(dateFrom) ||(key.isAfter(dateFrom) && key.isBefore(dateTo)) || key.isEqual(dateTo)) {
-                chosenFiles.add(value);
-            }
-        });
-        return chosenFiles;
+        return nameOfFile;
     }
 
     private void readNamesForPreviuosYears(int yearFrom, int yearTo) {
@@ -77,11 +68,13 @@ public class XmlExtractor {
         }
     }
 
-    private Map<LocalDate, String> adaptedFields(String inputLine) {
+    private Set<String> adaptedFields(String inputLine) {
         final String partOfYear = "20";
         LocalDate date = LocalDate.parse(partOfYear + inputLine.substring(5), FORMATTER); // skipping cxxxzYY symbols
-        files.put(date, inputLine);
-        return files;
+        if ( date.isEqual(dateFrom) ||(date.isAfter(dateFrom) && date.isBefore(dateTo)) || date.isEqual(dateTo)) {
+            nameOfFile.add(inputLine);
+        }
+        return nameOfFile;
     }
 
 }

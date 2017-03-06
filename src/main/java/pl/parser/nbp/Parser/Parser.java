@@ -9,7 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by valkos on 04.03.17.
@@ -30,7 +30,7 @@ public class Parser {
 
     public void parseFile() {
         XmlExtractor xmlData = new XmlExtractor(dateFrom, dateTo);
-        List<String> xmlFiles = xmlData.extractXmlNames();
+        Set<String> xmlFiles = xmlData.extractXmlNames();
         if (xmlFiles != null && !xmlFiles.isEmpty()) {
             xmlFiles.forEach(file -> gettingValues(XML_PATH + file + EXTENSION));
         }
